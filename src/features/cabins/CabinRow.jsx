@@ -1,4 +1,9 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components";
+import { formatCurrency } from "../../utils/helpers";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteCabin } from "../../services/apiCabins";
+import toast from "react-hot-toast";
 
 const TableRow = styled.div`
   display: grid;
@@ -38,3 +43,48 @@ const Discount = styled.div`
   font-weight: 500;
   color: var(--color-green-700);
 `;
+
+function CabinRow({ cabin }) {
+  const {
+    name,
+    id: cabinId,
+    maxCapacity,
+    regularPrice,
+    discount,
+    image,
+  } = cabin;
+
+
+  //deleteCabin only deletes cabin but it does not make refresh UI to show new list of cabins
+  //for this u need to invalidate to make it refresh
+  //useMutation hook is designed for changing data from an API (deleting, adding, updating)
+  //while useQuery hook is designed just for fetching
+  const { isLoading: isDeleting, mutate } = useMutation({
+    mutationFn: deleteCabin,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["cabin"],
+      });
+      toast.success("cabin was deleted")
+    },
+    onError: err => toast.error(err.message)
+  });
+
+  //cache manager, it stores, manages and invalidates queries which allows for automatic UI update when data changes
+  const queryClient = useQueryClient();
+
+  return (
+    <TableRow role="row">
+      <Img src={image} />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity}</div>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      <Discount>{formatCurrency(discount)}</Discount>
+      <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
+        Delete
+      </button>
+    </TableRow>
+  );
+}
+
+export default CabinRow;
