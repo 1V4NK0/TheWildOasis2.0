@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCabin } from "../../services/apiCabins";
-import toast from "react-hot-toast";
 import { useState } from "react";
 import CreateCabinForm from "./CreateCabinForm";
+import { useDeleteCabin } from "./useDeleteCabin";
+import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import { useCreateCabin } from "./useCreateCabin";
 
 const TableRow = styled.div`
   display: grid;
@@ -47,8 +47,9 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
+  const { isCreating, createCabin } = useCreateCabin();
   const [showForm, setShowForm] = useState(false);
-
+  const { isDeleting, deleteCabin } = useDeleteCabin();
   const {
     name,
     id: cabinId,
@@ -56,25 +57,19 @@ function CabinRow({ cabin }) {
     regularPrice,
     discount,
     image,
+    description,
   } = cabin;
 
-  //deleteCabin only deletes cabin but it does not make refresh UI to show new list of cabins
-  //for this u need to invalidate to make it refresh
-  //useMutation hook is designed for changing data from an API (deleting, adding, updating)
-  //while useQuery hook is designed just for fetching
-  const { isLoading: isDeleting, mutate } = useMutation({
-    mutationFn: deleteCabin,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["cabin"],
-      });
-      toast.success("cabin was deleted");
-    },
-    onError: (err) => toast.error(err.message),
-  });
-
-  //cache manager, it stores, manages and invalidates queries which allows for automatic UI update when data changes
-  const queryClient = useQueryClient();
+  function handleDuplicate() {
+    createCabin({
+      name: `Copy of ${name}`,
+      maxCapacity,
+      regularPrice,
+      discount,
+      image,
+      description,
+    });
+  }
 
   return (
     <>
@@ -83,15 +78,24 @@ function CabinRow({ cabin }) {
         <Cabin>{name}</Cabin>
         <div>Fits up to {maxCapacity}</div>
         <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>{formatCurrency(discount)}</Discount>
+        {discount ? (
+          <Discount>{formatCurrency(discount)}</Discount>
+        ) : (
+          <span>&mdash;</span>
+        )}
         <div>
-          <button onClick={() => setShowForm(!showForm)}>Edit</button>
-          <button onClick={() => mutate(cabinId)} disabled={isDeleting}>
-            Delete
+          <button disabled={isCreating} onClick={handleDuplicate}>
+            <HiSquare2Stack />
+          </button>
+          <button onClick={() => setShowForm(!showForm)}>
+            <HiPencil />
+          </button>
+          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
+            <HiTrash />
           </button>
         </div>
       </TableRow>
-      {showForm && <CreateCabinForm cabinToEdit={cabin}/>}
+      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }
