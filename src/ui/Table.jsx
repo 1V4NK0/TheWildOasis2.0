@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+import { createClient } from "@supabase/supabase-js";
+import { createContext, useContext } from "react";
 import styled from "styled-components";
 
 const StyledTable = styled.div`
@@ -58,3 +61,39 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+const TableContext = createContext();
+
+// eslint-disable-next-line react/prop-types
+function Table({ columns, children }) {
+  return (
+    <TableContext.Provider value={{ columns }}>
+      <StyledTable role="table">{children}</StyledTable>
+    </TableContext.Provider>
+  );
+}
+
+// eslint-disable-next-line react/prop-types
+function Header({ children }) {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledHeader role="row" columns={columns}>
+      {children}
+    </StyledHeader>
+  );
+}
+function Row({ children }) {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledRow role="row" columns={columns}>
+      {children}
+    </StyledRow>
+  );
+}
+function Body({ children }) {}
+
+Table.Header = Header;
+Table.Body = Body;
+Table.Row = Row;
+Table.Footer = Footer;
+
+export default Table;

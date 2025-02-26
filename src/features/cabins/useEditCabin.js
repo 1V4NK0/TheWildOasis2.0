@@ -13,7 +13,7 @@ export function useEditCabin() {
     mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
     onSuccess: () => {
       toast.success("cabin was succesfully edited");
-      queryClient.invalidateQueries({ queryKey: ["cabin"] });
+      queryClient.invalidateQueries({ queryKey: ["cabins"] });
     },
     onError: (err) => toast.error(err.message),
   });
