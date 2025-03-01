@@ -3,8 +3,10 @@ import { createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
 import { HiEllipsisVertical } from "react-icons/hi2";
 import styled from "styled-components";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledMenu = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -30,14 +32,14 @@ const StyledToggle = styled.button`
 `;
 
 const StyledList = styled.ul`
-  position: fixed;
-
+  position: absolute;
+  z-index: 1;
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
 
-  right: ${(props) => props.position.x}px;
-  top: ${(props) => props.position.y}px;
+  right: ${(props) => props.$position.x}px;
+  top: ${(props) => props.$position.y}px;
 `;
 
 const StyledButton = styled.button`
@@ -79,7 +81,7 @@ function Menus({ children }) {
     <MenusContext.Provider
       value={{ openId, close, open, position, setPosition }}
     >
-      {children}
+      <StyledMenu>{children}</StyledMenu>
     </MenusContext.Provider>
   );
 }
@@ -90,19 +92,11 @@ function Toggle({ id }) {
   function handleClick(e) {
     const coordinates = e.target.closest("button").getBoundingClientRect();
     setPosition({
-      x: window.innerWidth - coordinates.width - coordinates.x,
-      y: coordinates.y + coordinates.height + 10,
+      x: -15,
+      y: coordinates.height+8,
     });
 
-    if (openId !== id) {
-      close();
-      open(id);
-      console.log();
-    } else if (openId === id) {
-      close();
-    }
-
-
+    openId === "" || openId !== id ? open(id) : close();
   }
 
   return (
@@ -113,13 +107,11 @@ function Toggle({ id }) {
 }
 
 function List({ id, children }) {
-  const { openId, position } = useContext(MenusContext);
+  const { openId, position, close } = useContext(MenusContext);
+  const ref = useOutsideClick(close);
   if (openId !== id) return null;
   //use createPortal to render this straight into body element
-  return createPortal(
-    <StyledList position={position}>{children}</StyledList>,
-    document.body
-  );
+  return <StyledList $position={position} ref={ref}>{children}</StyledList>;
 }
 
 function Button({ children, icon, onClick }) {

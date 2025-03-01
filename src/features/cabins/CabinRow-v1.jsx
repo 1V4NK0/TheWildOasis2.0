@@ -74,43 +74,51 @@ function CabinRow({ cabin }) {
           <span>&mdash;</span>
         )}
         <div>
+          {/* <button disabled={isCreating} onClick={handleDuplicate}>
+            <HiSquare2Stack />
+          </button> */}
+{/* 
           <Modal>
-            <Menus>
-              <Menus.Toggle id={cabinId} />
-              <Menus.List id={cabinId}>
-                <Menus.Button
-                  icon={<HiSquare2Stack />}
-                  onClick={handleDuplicate}
-                >
-                  Duplicate
-                </Menus.Button>
+            <Modal.Open opens="edit">
+              <button>
+                <HiPencil />
+              </button>
+            </Modal.Open>
 
-                <Modal.Open opens="edit">
-                  <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
-                </Modal.Open>
+            <Modal.Window name="edit">
+              <CreateCabinForm
+                cabinToEdit={cabin}
+                onClose={() => document.body.click()}
+              />
+            </Modal.Window>
 
-                <Modal.Open opens="delete">
-                  <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-                </Modal.Open>
-              </Menus.List>
+            <Modal.Open opens="delete">
+              <button>
+                <HiTrash />
+              </button>
+            </Modal.Open>
+            <Modal.Window name="delete">
+              <ConfirmDelete
+                resourceName="cabins"
+                disabled={isDeleting}
+                onCloseModal={() => document.body.click()}
+                onConfirm={() => deleteCabin(cabinId)}
+              />
+            </Modal.Window>
+          </Modal> */}
 
-              <Modal.Window name="edit">
-                <CreateCabinForm
-                  cabinToEdit={cabin}
-                  onClose={() => document.body.click()}
-                />
-              </Modal.Window>
+          <Menus>
+            <Menus.Toggle id={cabinId} />
+            <Menus.List id={cabinId}>
+              <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+                Duplicate
+              </Menus.Button>
 
-              <Modal.Window name="delete">
-                <ConfirmDelete
-                  resourceName="cabins"
-                  disabled={isDeleting}
-                  onCloseModal={() => document.body.click()}
-                  onConfirm={() => deleteCabin(cabinId)}
-                />
-              </Modal.Window>
-            </Menus>
-          </Modal>
+              <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+
+              <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+            </Menus.List>
+          </Menus>
         </div>
       </Table.Row>
     </>
