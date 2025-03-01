@@ -1,11 +1,10 @@
-
 import styled from "styled-components";
 
 import Spinner from "../../ui/Spinner";
 import CabinRow from "./CabinRow";
 import { useCabins } from "./useCabins";
-import Table from '../../ui/Table'
-
+import Table from "../../ui/Table";
+import Menus from "../../ui/Menus";
 
 const TableHeader = styled.header`
   display: grid;
@@ -23,25 +22,31 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
-  const {isLoading, cabins} = useCabins();
+  const { isLoading, cabins } = useCabins();
 
   if (isLoading) return <Spinner />;
 
   return (
-    <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
-      <Table.Header role="row">
-        <div></div>
-        <div>Cabin</div>
-        <div>Capacity</div>
-        <div>Price</div>
-        <div>Discount</div>
-        <div></div>
-      </Table.Header>
-      
-      {cabins.map((cabin) => {
-        return <CabinRow cabin={cabin} key={cabin.id} />;
-      })}
-    </Table>
+    <Menus>
+      <Table columns="0.6fr 1.8fr 2.2fr 1fr 1fr 1fr">
+        <Table.Header role="row">
+          <div></div>
+          <div>Cabin</div>
+          <div>Capacity</div>
+          <div>Price</div>
+          <div>Discount</div>
+          <div></div>
+        </Table.Header>
+
+        {/* you pass what you want render (cabins in this case) and what you want to do with data (create a cabin row) */}
+        <Table.Body
+          data={cabins}
+          render={(cabin) => {
+            return <CabinRow cabin={cabin} key={cabin.id} />;
+          }}
+        />
+      </Table>
+    </Menus>
   );
 }
 
