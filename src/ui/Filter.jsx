@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+import { useSearchParams } from "react-router-dom";
 import styled, { css } from "styled-components";
 
 const StyledFilter = styled.div`
@@ -33,3 +35,32 @@ const FilterButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+// eslint-disable-next-line react/prop-types
+function Filter({ filterField, options }) {
+  //an obj representing URL query params
+  const [searchParams, setSearchParams] = useSearchParams();
+  function handleClick(value) {
+    //update the query parameter filterField
+    searchParams.set(filterField, value);
+    //update the whole URL
+    setSearchParams(searchParams);
+  }
+  const currentFilter = searchParams.get(filterField) || options.at(0).value;
+
+  return (
+    <StyledFilter>
+      {options.map((option) => (
+        <FilterButton
+          onClick={() => handleClick(option.value)}
+          key={option.value}
+          active={option.value === currentFilter}
+        >
+          {option.label}
+        </FilterButton>
+      ))}
+    </StyledFilter>
+  );
+}
+
+export default Filter;

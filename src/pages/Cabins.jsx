@@ -7,6 +7,7 @@ import Modal from "../ui/Modal";
 import CreateCabinForm from "../features/cabins/CreateCabinForm";
 import Button from "../ui/Button";
 import AddCabin from "../features/cabins/AddCabin";
+import CabinTableOperations from "../features/cabins/CabinTableOperations";
 function Cabins() {
   const [isOpenModal, setIsOpenModal] = useState(true);
 
@@ -14,18 +15,14 @@ function Cabins() {
     <>
       <Row type="horizontal">
         <Heading as="h1">All cabins</Heading>
-        <p>Filter / Sort</p>
+
+        <CabinTableOperations />
       </Row>
 
       <Row>
         <CabinTable />
-        {/* <Button onClick={() => setIsOpenModal(true)}>Create new cabin</Button>
-        {isOpenModal && (
-          <Modal>
-            <CreateCabinForm onClose={() => setIsOpenModal(false)} />
-          </Modal>
-        )} */}
-        <AddCabin onClose={() => setIsOpenModal(true)}/>
+
+        <AddCabin onClose={() => setIsOpenModal(true)} />
       </Row>
     </>
   );
