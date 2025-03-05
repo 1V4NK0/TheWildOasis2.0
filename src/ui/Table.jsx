@@ -1,14 +1,17 @@
 /* eslint-disable react/prop-types */
-import { createClient } from "@supabase/supabase-js";
 import { createContext, useContext } from "react";
 import styled from "styled-components";
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
-
+  
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0 auto;
 `;
 
 const CommonRow = styled.div`
