@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 
 function CabinTable() {
   const { isLoading, cabins } = useCabins();
+  //allows to read and update the URL, sort of a map with keys and values
   const [searchParams] = useSearchParams();
   if (isLoading) return <Spinner />;
 
@@ -21,9 +22,11 @@ function CabinTable() {
 
   //SORTING
   const sortBy = searchParams.get("sortBy") || "startDate-asc";
+  
   const [field, direction] = sortBy.split("-");
   //to reverse arr for different direction sorted
   const modifier = direction === "asc" ? 1 : -1;
+
   const sortedCabins = filteredCabins.sort((a, b) => {
     if (typeof a[field] === "string") {
       //localeCompare is used for comparing string alphabetically

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import styled from "styled-components";
 import { format, isToday } from "date-fns";
 
@@ -65,14 +66,20 @@ function BookingRow({
 
       <Stacked>
         <span>
-          {isToday(new Date(startDate))
+          {startDate && isToday(new Date(startDate))
             ? "Today"
-            : formatDistanceFromNow(startDate)}{" "}
+            : startDate
+            ? formatDistanceFromNow(new Date(startDate))
+            : "Invalid Date"}{" "}
           &rarr; {numNights} night stay
         </span>
         <span>
-          {format(new Date(startDate), "MMM dd yyyy")} &mdash;{" "}
-          {format(new Date(endDate), "MMM dd yyyy")}
+          {startDate && endDate
+            ? `${format(new Date(startDate), "MMM dd yyyy")} - ${format(
+                new Date(endDate),
+                "MMM dd yyyy"
+              )}`
+            : "Invalid Date"}
         </span>
       </Stacked>
 

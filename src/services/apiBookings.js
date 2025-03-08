@@ -1,6 +1,26 @@
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 
+//with these functions from the file you can interact with backend, server
+
+//returns data for ALL bookings
+export async function getBookings() {
+  //fetches data not just from bookings but from cabin and guests
+  const { data, error } = await supabase
+    .from("bookings")
+    .select(
+      "id, created_at,startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)"
+    );
+
+  if (error) {
+    console.log(error);
+    throw new Error("Bookings could not be loaded");
+  }
+
+  return data;
+}
+
+//returns data for just one booking
 export async function getBooking(id) {
   const { data, error } = await supabase
     .from("bookings")
