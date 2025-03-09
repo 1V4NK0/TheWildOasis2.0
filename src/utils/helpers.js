@@ -6,8 +6,12 @@ export const subtractDates = (dateStr1, dateStr2) =>
   differenceInDays(parseISO(String(dateStr1)), parseISO(String(dateStr2)));
 
 export const formatDistanceFromNow = (dateStr) => {
-  console.log(dateStr);
-  formatDistance(parseISO(dateStr), new Date(), {
+  if (!dateStr) return "Invalid Date";
+
+  // If dateStr is already a Date object, use it directly
+  const date = dateStr instanceof Date ? dateStr : parseISO(dateStr);
+
+  return formatDistance(date, new Date(), {
     addSuffix: true,
   })
     .replace("about ", "")

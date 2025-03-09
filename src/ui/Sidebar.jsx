@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import Logo from "./Logo"
 import MainNav from './MainNav'
+import Uploader from '../data/Uploader'
 
 //grid row takes all space from top to the bottom
 //so it takes all height of the grid vertically
@@ -19,6 +20,8 @@ function Sidebar() {
         <StyledSidebar>
             <Logo />
             <MainNav />
+
+            <Uploader />
         </StyledSidebar>
     )
 }
