@@ -4,36 +4,33 @@ import supabase from "./supabase";
 //with these functions from the file you can interact with backend, server
 
 //returns data for ALL bookings
-export async function getBookings() {
-  //fetches data not just from bookings but from cabin and guests
-  // let query = supabase
-  //   .from("bookings")
-  //   .select(
-  //     "id, created_at,startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)"
-  //   );
+export async function getBookings({ filter, sortBy }) {
+  let query = supabase.from("bookings").select(
+    "id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)"
+  );
 
-  // //FILTER
-  // if (filter) query = query.eq(filter.field, filter.value);
+  // FILTERING
+  if (filter) {
+    if (filter.field === "status") {
+      query = query.eq("status", filter.value);
+    }
+  }
 
-  // //SORT
-  // if (sortBy)
-  //   query = query.order(sortBy.field, {
-  //     ascending: sortBy.direction === "asc",
-  //   });
+  // SORTING
+  if (sortBy) {
+    query = query.order(sortBy.field, { ascending: sortBy.direction === "asc" });
+  }
 
-  const { data, error } = await supabase
-    .from("bookings")
-    .select(
-      "id, created_at,startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)"
-    );
+  const { data, error } = await query;
 
   if (error) {
-    console.log(error);
+    console.error(error);
     throw new Error("Bookings could not be loaded");
   }
 
   return data;
 }
+
 
 //returns data for just one booking
 export async function getBooking(id) {

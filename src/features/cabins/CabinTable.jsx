@@ -11,6 +11,10 @@ function CabinTable() {
   const [searchParams] = useSearchParams();
   if (isLoading) return <Spinner />;
 
+  //in this project it's okay to fetch all data and then filter and sort it
+  //but it's better to fetch already filtered data because u might not need all the data
+  //more efficient
+
   //FILTERING
   const filterValue = searchParams.get("discount") || "all";
   let filteredCabins;
@@ -22,7 +26,7 @@ function CabinTable() {
 
   //SORTING
   const sortBy = searchParams.get("sortBy") || "startDate-asc";
-  
+
   const [field, direction] = sortBy.split("-");
   //to reverse arr for different direction sorted
   const modifier = direction === "asc" ? 1 : -1;
