@@ -1,15 +1,47 @@
 import BookingRow from "./BookingRow";
 import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
-import Spinner from '../../ui/Spinner'
-import {useBookings} from './useBookings'
+import Spinner from "../../ui/Spinner";
+import { useBookings } from "./useBookings";
+import { useSearchParams } from "react-router-dom";
 
 function BookingTable() {
-  const {bookings, isLoading} = useBookings();
+  const { bookings, isLoading } = useBookings();
+  const [searchParams] = useSearchParams();
 
-  if (isLoading) return <Spinner />
+  if (isLoading) return <Spinner />;
 
-  // if (!bookings.length) return <Empty resource="bookings"/>
+  //FILTERING
+  const filterValue = searchParams.get("status") || "all";
+  let filteredBookings;
+  if (filterValue === "all") filteredBookings = bookings;
+  if (filterValue === "checked-out")
+    filteredBookings = bookings.filter(
+      (booking) => booking.status === "checked-out"
+    );
+  if (filterValue === "checked-in")
+    filteredBookings = bookings.filter(
+      (booking) => booking.status === "checked-in"
+    );
+  if (filterValue === "unconfirmed")
+    filteredBookings = bookings.filter(
+      (booking) => booking.status === "unconfirmed"
+    );
+
+  //SORTING
+  const sortBy = searchParams.get("sortBy") || "startDate-asc";
+  const [field, direction] = sortBy.split("-");
+  const modifier = direction === "asc" ? 1 : -1;
+
+  let sortedAndFilteredBookings;
+
+  sortedAndFilteredBookings = filteredBookings.sort((a, b) => {
+    if (typeof a[field] === "string") {
+      //localeCompare is used for comparing string alphabetically
+      return a[field].localeCompare(b[field]) * modifier;
+    }
+    return (a[field] - b[field]) * modifier;
+  });
 
   return (
     <Menus>
@@ -24,7 +56,7 @@ function BookingTable() {
         </Table.Header>
 
         <Table.Body
-          data={bookings}
+          data={sortedAndFilteredBookings}
           render={(booking) => (
             <BookingRow key={booking.id} booking={booking} />
           )}

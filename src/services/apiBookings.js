@@ -6,6 +6,21 @@ import supabase from "./supabase";
 //returns data for ALL bookings
 export async function getBookings() {
   //fetches data not just from bookings but from cabin and guests
+  // let query = supabase
+  //   .from("bookings")
+  //   .select(
+  //     "id, created_at,startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email)"
+  //   );
+
+  // //FILTER
+  // if (filter) query = query.eq(filter.field, filter.value);
+
+  // //SORT
+  // if (sortBy)
+  //   query = query.order(sortBy.field, {
+  //     ascending: sortBy.direction === "asc",
+  //   });
+
   const { data, error } = await supabase
     .from("bookings")
     .select(
