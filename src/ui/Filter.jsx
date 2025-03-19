@@ -43,6 +43,7 @@ function Filter({ filterField, options }) {
   function handleClick(value) {
     //update the query parameter filterField
     searchParams.set(filterField, value);
+    if (searchParams.get("page")) searchParams.set("page", 1);
     //update the whole URL
     setSearchParams(searchParams);
   }
