@@ -5,9 +5,15 @@ import Menus from "../../ui/Menus";
 import Tag from "../../ui/Tag";
 import Table from "../../ui/Table";
 
+import { useDeleteBooking } from "./useDeleteBooking";
 import { formatCurrency } from "../../utils/helpers";
 import { formatDistanceFromNow } from "../../utils/helpers";
-import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiEye } from "react-icons/hi2";
+import {
+  HiArrowDownOnSquare,
+  HiArrowUpOnSquare,
+  HiEye,
+  HiTrash,
+} from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { useCheckout } from "../check-in-out/useCheckout";
@@ -58,7 +64,7 @@ function BookingRow({
     "checked-in": "green",
     "checked-out": "silver",
   };
-
+  const { isDeleting, deleteBooking } = useDeleteBooking();
   const navigate = useNavigate();
   const { checkout, isCheckingOut } = useCheckout();
   return (
@@ -114,13 +120,23 @@ function BookingRow({
 
           {status === "checked-in" && (
             <Menus.Button
-              disabled={isCheckingOut}
+              disabled={isCheckingOut || isDeleting}
               icon={<BsBoxArrowUpRight />}
               onClick={() => checkout(bookingId)}
             >
               Check out
             </Menus.Button>
           )}
+
+          <Menus.Button
+            disabled={isDeleting}
+            icon={<HiTrash />}
+            onClick={() => {
+              deleteBooking(bookingId);
+            }}
+          >
+            Delete
+          </Menus.Button>
         </Menus.List>
       </Menus>
     </Table.Row>
