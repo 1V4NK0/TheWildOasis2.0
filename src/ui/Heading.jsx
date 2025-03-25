@@ -14,8 +14,9 @@ css`
 line-height: 1.4;
 ${props => props.as === 'h2' &&
 css`
-    font-size: 2rem;
-    font-weight: 400;
+    font-size: 3rem;
+    text-align: center;
+    font-weight: 600;
 `}
 
 ${props => props.as === 'h3' &&
