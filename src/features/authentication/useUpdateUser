@@ -1,0 +1,23 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateCurrentUser } from "../../services/apiAuth";
+import toast from "react-hot-toast";
+
+
+//the key point of such hooks is to add more functionality rather than just direct interaction with API
+//like updating user, u can add callbacks for success and error and add loading state as well and use caching?
+//and might be reused somewhere else if u need
+// API layer (apiAuth) focuses on interaction with backend
+export function useUpdateUser() {
+    const queryClient = useQueryClient();
+
+    const {mutate: updateUser, isLoading: isUpdating} = useMutation({
+        mutationFn: updateCurrentUser,
+        onSuccess: () => {
+            toast.success("User profile has been succesfully updated")       
+            queryClient.invalidateQueries({queryKey: ["user"]})
+        },
+        onError: () => toast.error("Error")
+    })
+
+    return {updateUser, isUpdating}
+}
