@@ -13,7 +13,7 @@ export async function signup({ fullName, email, password }) {
     },
   });
 
-  //tried to prevent registering a user with already used credentials
+  //tried to prevent registering a user with already used credentials might not work
   if (error) {
     if (error.message.includes("unique")) {
       throw new Error("User with this email already exists");
@@ -73,12 +73,13 @@ export async function updateCurrentUser({ password, fullName, avatar }) {
   if (storageError) throw new Error(error.message);
 
   //3. update avatar in the user
-  const { data: updatedUser, error: updateError } = supabase.auth.updateUser({
-    data: {
-      avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
-    },
-  });
+  const { data: updatedUser, error: updateError } =
+    await supabase.auth.updateUser({
+      data: {
+        avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
+      },
+    });
 
-  if (error) throw new Error(updateError.message)
-  return updatedUser
+  if (error) throw new Error(updateError.message);
+  return updatedUser;
 }
