@@ -1,7 +1,24 @@
 import { getToday } from "../utils/helpers";
 import supabase from "./supabase";
 import { PAGE_SIZE } from "../utils/constants";
+//TODO: NEW FUNCTION TO CREATE AND ADD NEW BOOKING, then create hook and then test it.
 //with these functions from the file you can interact with backend, server
+
+//SERVICE TO ADD NEW BOOKING, might need to be changed
+export async function addNewBooking(newBooking) {
+  const { data, error } = await supabase
+    .from("bookings")
+    //CHANGE .INSERT()
+    .insert([{ ...newBooking }])
+    .select()
+    .single();
+
+  if (error) {
+    console.log("New booking could not be created");
+    throw new Error(error);
+  }
+  return data;
+}
 
 //returns data for ALL bookings
 export async function getBookings({ filter, sortBy, page }) {

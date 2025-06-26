@@ -15,7 +15,7 @@ function SortBy({ options }) {
       type="white"
       options={options}
       onChange={handleChange}
-      value={sortBy }
+      value={sortBy}
     />
   );
 }

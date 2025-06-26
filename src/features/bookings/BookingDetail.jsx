@@ -8,6 +8,7 @@ import ButtonGroup from "../../ui/ButtonGroup";
 import Button from "../../ui/Button";
 import ButtonText from "../../ui/ButtonText";
 import Spinner from "../../ui/Spinner";
+import Empty from "../../ui/Empty";
 import { useMoveBack } from "../../hooks/useMoveBack";
 import { useBooking } from "./useBooking";
 import { HiArrowDownOnSquare } from "react-icons/hi2";
@@ -29,6 +30,7 @@ function BookingDetail() {
   const moveBack = useMoveBack();
 
   if (isLoading) return <Spinner />;
+  if (!booking) return <Empty resource="booking" />;
   const statusToTagName = {
     unconfirmed: "blue",
     "checked-in": "green",

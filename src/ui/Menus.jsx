@@ -90,10 +90,12 @@ function Toggle({ id }) {
   const { openId, close, open, setPosition } = useContext(MenusContext);
 
   function handleClick(e) {
+    e.stopPropagation();
+
     const coordinates = e.target.closest("button").getBoundingClientRect();
     setPosition({
       x: -15,
-      y: coordinates.height+8,
+      y: coordinates.height + 8,
     });
 
     openId === "" || openId !== id ? open(id) : close();
@@ -108,10 +110,15 @@ function Toggle({ id }) {
 
 function List({ id, children }) {
   const { openId, position, close } = useContext(MenusContext);
-  const ref = useOutsideClick(close);
+  const ref = useOutsideClick(close, false);
+
   if (openId !== id) return null;
   //use createPortal to render this straight into body element
-  return <StyledList $position={position} ref={ref}>{children}</StyledList>;
+  return (
+    <StyledList $position={position} ref={ref}>
+      {children}
+    </StyledList>
+  );
 }
 
 function Button({ children, icon, onClick }) {
