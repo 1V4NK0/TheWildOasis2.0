@@ -16,6 +16,7 @@ import Spinner from "../../ui/Spinner";
 import Heading from "../../ui/Heading";
 import toast from "react-hot-toast";
 import { Flag } from "../../ui/Flag";
+import { useEffect, useState } from "react";
 //import new hook to add new booking
 
 function NewBookingForm() {
@@ -52,6 +53,7 @@ function NewBookingForm() {
   //4. automatically calculate the price
   //5. show the final numbers like total price and blah blah blah?...
   //6. finish onSubmit func, make adding guest first and only then create booking
+  //7. handle the flag api calls, optimize it, it's
   const {
     register,
     handleSubmit,
@@ -90,6 +92,18 @@ function NewBookingForm() {
   const totalPrice =
     extrasPrice + (Number(chosenCabin?.regularPrice) || 0) * nights;
 
+  const [debouncedNationality, setDebouncedNationality] = useState(nationality);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedNationality(nationality);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [nationality]);
+
+  const flagUrl = getCountryCode(debouncedNationality);
+
   // console.log("Calculated values:", {
   //   nights,
   //   breakfastPrice,
@@ -99,20 +113,6 @@ function NewBookingForm() {
   // });
 
   countries.registerLocale(enLocale);
-
-  // function onSubmit(data) {
-  //   const guestData = {
-  //     fullName: data.fullName,
-  //     email: data.email,
-  //     nationalID: data.nationalID,
-  //     nationality: data.nationality,
-  //     countryFlag: getCountryCode(data.nationality),
-  //   };
-
-  //   addGuest({ ...guestData }, { onSuccess: () => reset() });
-  //   //how to get guest id?
-  //   //create a booking object and then pass it into the add booking hook?
-  // }
 
   function onSubmit(data) {
     const guestData = {
@@ -210,9 +210,7 @@ function NewBookingForm() {
             required: "This field is required",
           })}
         />
-        {getCountryCode(nationality) && (
-          <Flag src={getCountryCode(nationality)} />
-        )}
+        {flagUrl && <Flag src={flagUrl} />}
       </FormRow>
 
       <FormRow label="Cabin number" error={errors?.cabinId?.message}>
