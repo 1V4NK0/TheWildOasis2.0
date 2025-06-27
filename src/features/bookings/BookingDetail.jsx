@@ -11,7 +11,6 @@ import Spinner from "../../ui/Spinner";
 import Empty from "../../ui/Empty";
 import { useMoveBack } from "../../hooks/useMoveBack";
 import { useBooking } from "./useBooking";
-import { HiArrowDownOnSquare } from "react-icons/hi2";
 import { useNavigate } from "react-router-dom";
 import { BsBoxArrowUpRight } from "react-icons/bs";
 import { useCheckout } from "../check-in-out/useCheckout";
