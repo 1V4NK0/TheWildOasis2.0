@@ -8,7 +8,6 @@ import { PAGE_SIZE } from "../utils/constants";
 export async function addNewBooking(newBooking) {
   const { data, error } = await supabase
     .from("bookings")
-    //CHANGE .INSERT()
     .insert([{ ...newBooking }])
     .select()
     .single();
@@ -20,7 +19,7 @@ export async function addNewBooking(newBooking) {
   return data;
 }
 
-//returns data for ALL bookings
+//returns data for bookings
 export async function getBookings({ filter, sortBy, page }) {
   let query = supabase
     .from("bookings")
@@ -117,10 +116,6 @@ export async function getStaysTodayActivity() {
       `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`
     )
     .order("created_at");
-
-  // Equivalent to this. But by querying this, we only download the data we actually need, otherwise we would need ALL bookings ever created
-  // (stay.status === 'unconfirmed' && isToday(new Date(stay.startDate))) ||
-  // (stay.status === 'checked-in' && isToday(new Date(stay.endDate)))
 
   if (error) {
     console.error(error);

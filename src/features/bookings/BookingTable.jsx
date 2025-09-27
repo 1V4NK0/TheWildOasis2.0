@@ -5,9 +5,11 @@ import Pagination from "../../ui/Pagination";
 import Spinner from "../../ui/Spinner";
 import { useBookings } from "./useBookings";
 
+
 function BookingTable() {
   const { bookings, isLoading, count } = useBookings();
-  console.log(bookings.at(2));
+
+  // console.log(bookings.at(2));
   if (isLoading) return <Spinner />;
 
   return (

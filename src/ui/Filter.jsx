@@ -37,7 +37,7 @@ const FilterButton = styled.button`
 `;
 
 // eslint-disable-next-line react/prop-types
-function Filter({ filterField, options }) {
+function  Filter({ filterField, options }) {
   //an obj representing URL query params
   const [searchParams, setSearchParams] = useSearchParams();
   function handleClick(value) {

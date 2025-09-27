@@ -54,15 +54,8 @@ function NewBookingForm() {
   //5. show the final numbers like total price and blah blah blah?...
   //6. finish onSubmit func, make adding guest first and only then create booking
   //7. handle the flag api calls, optimize it, it's
-  const {
-    register,
-    handleSubmit,
-    reset,
-    getValues,
-    formState,
-    watch,
-    control,
-  } = useForm();
+  const { register, handleSubmit, reset, formState, watch, control } =
+    useForm();
   const { cabins, isLoading } = useCabins();
   const { settings } = useSettings();
   const {
@@ -222,6 +215,7 @@ function NewBookingForm() {
           defaultValue={cabins[0].id}
           render={({ field }) => (
             <Select
+              disabled={isAdding}
               options={(cabins ?? []).map((cabin) => ({
                 value: cabin.id,
                 label: cabin.name,
@@ -237,6 +231,7 @@ function NewBookingForm() {
 
         <Input
           type="date"
+          disabled={isAdding}
           min={new Date().toISOString().split("T")[0]}
           {...register("startDate", {
             required: "This field is required",
@@ -250,6 +245,7 @@ function NewBookingForm() {
         <Input
           min={getNextDay(checkInDate)}
           type="date"
+          disabled={isAdding}
           {...register("endDate", {
             required: "This field is required",
           })}
@@ -261,6 +257,7 @@ function NewBookingForm() {
         <Input
           type="number"
           min="1"
+          disabled={isAdding}
           max={maxGuestsPerBooking}
           defaultValue={1}
           {...register("numGuests", {
@@ -274,6 +271,7 @@ function NewBookingForm() {
       <FormRow label="Add breakfast">
         {/* TOGGLE TO INCLUDE BREAKFAST, custom checkbox element */}
         <Input
+          disabled={isAdding}
           type="checkbox"
           style={{ transform: "scale(2)" }}
           {...register("hasBreakfast")}
@@ -282,7 +280,7 @@ function NewBookingForm() {
 
       <FormRow label="Observations">
         {/* OBSERVATIONS TEXTAREA */}
-        <Textarea {...register("observations")} />
+        <Textarea disabled={isAdding} {...register("observations")} />
       </FormRow>
 
       {/* // console.log("Calculated values:", {
@@ -302,8 +300,12 @@ function NewBookingForm() {
       <Heading as="h4">Total price: {totalPrice ? totalPrice : 0}</Heading>
 
       <FormRow>
-        <Button type="submit">Create new booking</Button>
-        <Button type="reset">Cancel</Button>
+        <Button type="submit" disabled={isAdding}>
+          Create new booking
+        </Button>
+        <Button type="reset" disabled={isAdding}>
+          Cancel
+        </Button>
       </FormRow>
     </Form>
   );

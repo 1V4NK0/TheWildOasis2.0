@@ -11,7 +11,7 @@ export function useBookings() {
   //get sorting and filtering parameters from the URL
   const [searchParams] = useSearchParams();
 
-  // FILTERING
+  // FILTERINGx
   const filterValue = searchParams.get("status") || "all";
   const filter =
     filterValue === "all" ? null : { field: "status", value: filterValue };

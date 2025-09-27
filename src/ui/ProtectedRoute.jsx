@@ -5,7 +5,6 @@ import { useUser } from "../features/authentication/useUser";
 import Spinner from "./Spinner";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 
 const FullPage = styled.div`
   height: 100vh;
@@ -19,10 +18,8 @@ const FullPage = styled.div`
 function ProtectedRoute({ children }) {
   const navigate = useNavigate();
 
-  // 1. load data
   const { isAuthenticated, isLoading } = useUser();
 
-  // 2. if no logged in user redirect to login page
   useEffect(
     function () {
       if (!isAuthenticated && !isLoading) navigate("/login");
@@ -30,7 +27,6 @@ function ProtectedRoute({ children }) {
     [isAuthenticated, isLoading, navigate]
   );
 
-  // 3. while loading return spinner
   if (isLoading)
     return (
       <FullPage>

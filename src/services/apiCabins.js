@@ -10,7 +10,7 @@ export async function getCabins() {
 }
 
 export async function createEditCabin(newCabin, id) {
-  console.log(newCabin, id);
+  // console.log(newCabin, id);
   // If the image is already a URL, don't generate a new imagePath or imageName
   const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
 
